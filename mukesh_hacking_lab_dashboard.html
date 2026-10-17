@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050a12">
+<title>Mukesh Hacking Lab | Location Console</title>
+<style>
+:root{--bg:#050a12;--panel:#080f19;--line:#29394d;--blue:#79bdff;--text:#e8f1ff;--muted:#9baabd}
+*{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;background:radial-gradient(ellipse at top,#13253a 0,#050a12 58%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+main{max-width:1100px;margin:auto;padding:18px 16px 40px}.hidden{display:none!important}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.brand{font-size:clamp(17px,3vw,24px);font-weight:900;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 15px #3b8ddd66}
+.brand span{color:var(--blue)}.sub{display:block;color:var(--blue);font-size:10px;letter-spacing:3px;margin-top:7px}
+.status{font-size:10px;letter-spacing:1px;color:#8ce5b4;border:1px solid #285b43;padding:8px;white-space:nowrap}
+h1{font-size:14px;letter-spacing:3px;color:#aebed2;margin:18px 0}
+.frame{padding:12px;border:1px solid #526a85;background:linear-gradient(135deg,#1a2b3e,#050a12 20%,#050a12 80%,#1a2b3e);box-shadow:0 0 20px #000;margin-bottom:22px}
+.inner{padding:14px;border:1px solid #2b3c50;background:#030810}
+.photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.photo{aspect-ratio:4/3;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#080f19;border:1px solid #2c3d52;color:#647991;font-size:11px;letter-spacing:2px}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}.photo span{position:absolute;bottom:7px;left:7px;background:#02060bdc;padding:5px 7px;color:#d6e9ff;font-size:10px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-top:14px}.info{padding:15px 4px;border-bottom:1px solid #29384a;min-width:0}
+.label{font-size:10px;font-weight:bold;letter-spacing:2px;color:#9eafc5;margin-bottom:11px}.value{font-size:14px;line-height:1.5;overflow-wrap:anywhere;min-height:20px}
+button{border:1px solid #3b5877;background:#081422;color:var(--blue);padding:13px 15px;font-size:13px;letter-spacing:.4px;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}button:active,button.primary{background:#123251}button.wide{width:100%;margin-top:18px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:22px 0}
+section.editor{border:1px solid var(--line);background:var(--panel);padding:20px;margin-top:18px}
+.section-title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#aabbd0;margin:4px 0 18px}
+.hint{font-size:14px;color:var(--muted);line-height:1.55;margin:0 0 17px}
+textarea,input{width:100%;background:#03070d;border:1px solid #35465d;color:#fff;padding:14px;font-size:16px;line-height:1.45;border-radius:0}
+textarea{min-height:130px;resize:vertical}.editor-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
+.history-title{margin-top:28px}.history-list{display:grid;gap:10px}.history-item{border:1px solid #2b3a4c;padding:13px 15px;background:#040911;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.history-address{font-size:15px;overflow-wrap:anywhere}.history-time{color:var(--muted);font-size:12px;margin-top:6px}.history-item button{padding:8px 11px;font-size:11px;flex-shrink:0}
+.note{font-size:12px;line-height:1.6;color:#8d9daf;margin-top:18px}
+.login{max-width:430px;margin:12vh auto;padding:24px;border:1px solid #31455c;background:#08111d}.login h2{letter-spacing:3px;font-size:16px}.login p{color:var(--muted);font-size:13px;line-height:1.5}.login button{width:100%;margin-top:12px}
+@media(min-width:760px){main{padding-top:28px}.photo{aspect-ratio:16/7}.inner{padding:22px}.info{padding:18px 8px}section.editor{padding:26px}}
+@media(max-width:390px){main{padding:12px 10px 28px}.actions button{flex:1 1 42%;padding:12px 8px;font-size:11px}.history-item{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="brand">Mukesh <span>Hacking Lab</span><small class="sub">LOCATION CONSOLE · ACCESS CONTROL</small></div>
+  <h2>ACCESS REQUIRED</h2><p>Enter your dashboard password to continue.</p>
+  <input id="password" type="password" autocomplete="current-password" placeholder="Dashboard password">
+  <button id="unlock">UNLOCK DASHBOARD</button><p id="loginError" role="alert"></p>
+</div>
+<main id="app" class="hidden">
+<header><div class="brand">Mukesh <span>Hacking Lab</span><small class="sub">FIELD REPORT MONITOR</small></div><div class="status" id="status">LOCAL MODE</div></header>
+<h1>LOCATION & PHOTO REPORTS</h1>
+<div class="frame"><div class="inner">
+  <div class="photos" id="photos">
+    <div class="photo">PHOTO 01</div><div class="photo">PHOTO 02</div><div class="photo">PHOTO 03</div><div class="photo">PHOTO 04</div>
+  </div>
+  <div class="info-grid">
+    <div class="info"><div class="label">◉ &nbsp; LOCATION</div><div class="value" id="address">Address not provided</div></div>
+    <div class="info"><div class="label">⌖ &nbsp; COORDINATES</div><div class="value" id="coordinates">—</div></div>
+    <div class="info"><div class="label">⌖ &nbsp; ACCURACY</div><div class="value" id="accuracy">—</div></div>
+    <div class="info"><div class="label">◷ &nbsp; RECEIVED</div><div class="value" id="received">—</div></div>
+  </div>
+  <button class="wide primary" id="openMap">⊡ OPEN MAP ↗</button>
+</div></div>
+<div class="actions"><button id="importPhotos">＋ IMPORT FOUR PHOTOS</button><button id="showEditor">＋ LOCATION REPORT</button><button id="exportHistory">EXPORT HISTORY</button><button id="lock">LOCK</button></div>
+<input id="photoFiles" type="file" accept="image/*" multiple class="hidden">
+<section class="editor" id="editor">
+  <div class="section-title">IMPORT LOCATION REPORT</div>
+  <p class="hint">Paste a Google Maps link, coordinates, or a text report below. Coordinate formats supported include <b>17.3987839, 78.3808308</b>, Google Maps <b>?query=lat,lon</b>, and Maps links containing <b>@lat,lon</b>.</p>
+  <textarea id="reportInput" placeholder="Paste report here, e.g. https://www.google.com/maps/search/?api=1&amp;query=17.3987839,78.3808308"></textarea>
+  <div class="editor-buttons"><button class="primary" id="saveReport">SAVE REPORT</button><button id="clearInput">CLEAR</button></div>
+  <div class="section-title history-title">REPORT HISTORY</div><div class="history-list" id="history"></div>
+  <div class="note">Mukesh Hacking Lab · Single-file dashboard. Reports are stored in this browser. Discord live updates are not connected in this standalone file. Only display photos and location information shared with permission.</div>
+</section>
+</main>
+<script>
+(() => {
+"use strict";
+const DASHBOARD_PASSWORD = "!l9trkuh"; // Client-side passwords are visible in public source; not secure authentication.
+const STORAGE_KEY = "mukeshHackingLabReports_v1";
+const $ = id => document.getElementById(id);
+let reports = [], activeId = null, photoUrls = [];
+
+$("unlock").addEventListener("click", unlock);
+$("password").addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
+function unlock(){
+  if($("password").value === DASHBOARD_PASSWORD){
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden"); loadReports();
+  } else $("loginError").textContent = "Incorrect password.";
+}
+$("lock").addEventListener("click",()=>{$("app").classList.add("hidden");$("login").classList.remove("hidden");$("password").value="";});
+
+function readStorage(){
+  try{const value=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return Array.isArray(value)?value:[];}
+  catch(e){return [];}
+}
+function persist(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(reports));}
+  catch(e){alert("Browser storage is full. Export your history or remove some reports.");}
+}
+function loadReports(){
+  reports=readStorage();renderHistory();
+  if(reports.length)showReport(reports[0].id);
+}
+function validPair(lat,lon){
+  return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180;
+}
+function extractCoordinates(input){
+  const text=String(input||"").trim();
+  const candidates=[];
+  // Parse URL query parameters and /@latitude,longitude map paths.
+  const urls=text.match(/https?:\/\/[^\s<>"']+/gi)||[];
+  for(const rawUrl of urls){
+    try{
+      const url=new URL(rawUrl.replace(/[),.;]+$/,""));
+      ["query","q","destination","origin","ll","center"].forEach(key=>{
+        const value=url.searchParams.get(key); if(value)candidates.push(value);
+      });
+      const at=url.href.match(/@(-?\d{1,3}(?:\.\d+)?),\s*(-?\d{1,3}(?:\.\d+)?)/);
+      if(at)candidates.push(at[1]+","+at[2]);
+    }catch(e){}
+  }
+  // Support plain coordinate pairs and coordinate pairs embedded in report text.
+  candidates.push(text);
+  for(const candidate of candidates){
+    const pairs=candidate.match(/-?\d{1,3}(?:\.\d+)?\s*,\s*-?\d{1,3}(?:\.\d+)?/g)||[];
+    for(const pair of pairs){
+      const bits=pair.split(",").map(v=>Number(v.trim()));
+      if(bits.length===2&&validPair(bits[0],bits[1]))return {lat:bits[0],lon:bits[1]};
+    }
+  }
+  // Support reports using separate labelled fields.
+  const lat=text.match(/(?:^|\b)(?:lat|latitude)\s*[:=]\s*(-?\d+(?:\.\d+)?)/i);
+  const lon=text.match(/(?:^|\b)(?:lon|lng|longitude)\s*[:=]\s*(-?\d+(?:\.\d+)?)/i);
+  if(lat&&lon){
+    const a=Number(lat[1]),b=Number(lon[1]);if(validPair(a,b))return {lat:a,lon:b};
+  }
+  return null;
+}
+function getField(text,regex){
+  const match=text.match(regex);return match&&match[1]?match[1].trim():"";
+}
+function parseReport(raw){
+  const text=raw.trim(),coords=extractCoordinates(text);
+  const explicitAddress=getField(text,/(?:address|location|place)\s*[:=]\s*([^\r\n]+)/i);
+  const accuracy=getField(text,/(?:accuracy)\s*[:=]\s*([^\r\n]+)/i);
+  const time=getField(text,/(?:received|timestamp|time)\s*[:=]\s*([^\r\n]+)/i);
+  return {
+    id:(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+"-"+Math.random().toString(16).slice(2),
+    raw:text,address:explicitAddress|| (coords?"Coordinates received":"Address not provided"),
+    lat:coords?coords.lat:null,lon:coords?coords.lon:null,
+    accuracy:accuracy,received:time||new Date().toLocaleString(),photos:[],savedAt:Date.now()
+  };
+}
+function showReport(id){
+  const report=reports.find(item=>item.id===id);if(!report)return;
+  activeId=id;
+  $("address").textContent=report.address||"Address not provided";
+  $("coordinates").textContent=validPair(report.lat,report.lon)?`${report.lat}, ${report.lon}`:"—";
+  $("accuracy").textContent=report.accuracy||"—";
+  $("received").textContent=report.received||"—";
+  renderPhotos(report.photos||[]);renderHistory();
+}
+function renderPhotos(savedPhotos){
+  const container=$("photos");container.replaceChildren();
+  for(let i=0;i<4;i++){
+    const box=document.createElement("div");box.className="photo";
+    const src=photoUrls[i]||savedPhotos[i]||"";
+    if(src){const img=document.createElement("img");img.src=src;img.alt="Report photo "+(i+1);box.appendChild(img);}
+    else box.append("PHOTO 0"+(i+1));
+    const label=document.createElement("span");label.textContent="IMAGE "+String(i+1).padStart(2,"0");box.appendChild(label);container.appendChild(box);
+  }
+}
+function renderHistory(){
+  const container=$("history");container.replaceChildren();
+  if(!reports.length){const p=document.createElement("p");p.className="note";p.textContent="No reports saved yet.";container.appendChild(p);return;}
+  reports.forEach(report=>{
+    const item=document.createElement("div");item.className="history-item";
+    const left=document.createElement("div");left.style.minWidth="0";
+    const title=document.createElement("div");title.className="history-address";
+    title.textContent=report.address||(validPair(report.lat,report.lon)?`${report.lat}, ${report.lon}`:"Address not provided");
+    const time=document.createElement("div");time.className="history-time";time.textContent=report.received||"";
+    left.append(title,time);
+    const view=document.createElement("button");view.textContent="VIEW";view.addEventListener("click",()=>showReport(report.id));
+    item.append(left,view);container.appendChild(item);
+  });
+}
+$("saveReport").addEventListener("click",()=>{
+  const raw=$("reportInput").value.trim();
+  if(!raw){alert("Paste a location report or Google Maps URL first.");return;}
+  const report=parseReport(raw);
+  if(!validPair(report.lat,report.lon)){
+    alert("Could not find valid coordinates. Paste a Google Maps URL containing latitude,longitude or enter a pair such as 17.3987839, 78.3808308.");
+    return;
+  }
+  reports.unshift(report);persist();$("reportInput").value="";showReport(report.id);$("status").textContent="REPORT SAVED";
+});
+$("openMap").addEventListener("click",()=>{
+  const report=reports.find(item=>item.id===activeId);
+  if(!report||!validPair(report.lat,report.lon)){alert("This report has no coordinates. Save a report containing valid latitude and longitude first.");return;}
+  const mapUrl="https://www.google.com/maps?q="+encodeURIComponent(`${report.lat},${report.lon}`);
+  const opened=window.open(mapUrl,"_blank","noopener,noreferrer");
+  if(!opened)window.location.href=mapUrl;
+});
+$("clearInput").addEventListener("click",()=>$("reportInput").value="");
+$("importPhotos").addEventListener("click",()=>$("photoFiles").click());
+$("photoFiles").addEventListener("change",event=>{
+  const files=Array.from(event.target.files||[]).filter(file=>file.type.startsWith("image/")).slice(0,4);
+  photoUrls.forEach(url=>URL.revokeObjectURL(url));photoUrls=files.map(file=>URL.createObjectURL(file));
+  const report=reports.find(item=>item.id===activeId);renderPhotos(report?report.photos||[]:[]);event.target.value="";
+});
+$("showEditor").addEventListener("click",()=>$("editor").scrollIntoView({behavior:"smooth",block:"start"}));
+$("exportHistory").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(reports,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="mukesh-hacking-lab-history.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+})();
+</script>
+</body>
+</html>
